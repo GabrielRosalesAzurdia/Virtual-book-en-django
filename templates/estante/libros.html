@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Libros
+{% endblock %}
+
+{% block header %}
+
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    {% for libro in libros %}
+    <div class="card mb-4" style="max-width: 540px;">
+        <div class="row no-gutters">
+            <div class="col-md-4">
+                <a href="/libros/detalles/{{libro.libro_id}}"><img src="{{libro.imagen}}" class="card-img" alt="imagen del libro"></a>
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title mb-5">{{libro.titulo}}</h5>
+                    <p class="card-text mt-4"><small class="text-muted">{{libro.autor_id.nombre}}</small></p>
+                    <p class="card-text mt-4"><small class="text-muted">{{libro.categoria_id.nombre}}</small></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+
+            {% if libros.has_previous %}
+            <!-- <li class="page-item">
+                <a class="page-link" href="?page=1">&laquo; First</a>
+            </li> -->
+            <li class="page-item">
+                <a class="page-link" href="?page={{ libros.previous_page_number }}">Previous</a>
+            </li>
+            {% endif %}
+
+            <li class="page-item">
+                <span class="page-link">
+                    Page {{ libros.number }} of {{ libros.paginator.num_pages }}
+                </span>
+            </li>
+
+            {% if libros.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ libros.next_page_number }}">Next</a>
+            </li>
+            <!-- <li class="page-item">
+                <a class="page-link" href="?page={{ libros.paginator.num_pages }}">Last &raquo;</a>
+            </li> -->
+            {% endif %}
+        </ul>
+    </nav>
+
+</div>
+{% endblock %}

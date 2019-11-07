@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Detalles
+{% endblock %}
+
+{% block header %}
+
+{% endblock %}
+
+{% block content %}
+<div style="display:none;" id="error1-con">
+        <!-- style="position: absolute; top: 0; right: 0;" -->
+        <div id="error1" class="toast" data-autohide="false" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fpbs.twimg.com%2Fprofile_images%2F932211484%2Fcuadrado_rojo.png&f=1&nofb=1"
+                    style="height:2s0px; width:20px;" class="rounded mr-2" alt="">
+                <strong class="mr-auto">Virtualbook</strong>
+                <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="toast-body">
+                Este libro ya esta en tu lista
+            </div>
+        </div>
+</div>
+
+<div style="display:none;" id="error2-con">
+        <!-- style="position: absolute; top: 0; right: 0;" -->
+        <div id="error2" class="toast" data-autohide="false" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fpbs.twimg.com%2Fprofile_images%2F932211484%2Fcuadrado_rojo.png&f=1&nofb=1"
+                    style="height:2s0px; width:20px;" class="rounded mr-2" alt="">
+                <strong class="mr-auto">Virtualbook</strong>
+                <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="toast-body">
+                Has superado el limite de la lista de rentados
+            </div>
+        </div>
+</div>
+
+<div style="display:none;" id="error3-con">
+        <!-- style="position: absolute; top: 0; right: 0;" -->
+        <div id="error3" class="toast" data-autohide="false" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fpbs.twimg.com%2Fprofile_images%2F932211484%2Fcuadrado_rojo.png&f=1&nofb=1"
+                    style="height:2s0px; width:20px;" class="rounded mr-2" alt="">
+                <strong class="mr-auto">Virtualbook</strong>
+                <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="toast-body">
+                Ha ocurrido un error
+            </div>
+        </div>
+</div>
+
+<div class="container mt-3">
+    <div class="row">
+        <div class="col-6">
+            <img src="{{libro.imagen}}" alt="portada" style="height:500px;width:300px;">
+            <br>
+
+            <div class="d-flex mt-4 justify-content-around" style="width:300px;">
+                <div>
+                    <button onclick="adicionar_deseos( '{{libro.libro_id}}' )" id="popover1" class="btn"
+                        data-content="Añade el libro a tu lista de deseos" rel="popover" data-placement="bottom"
+                        data-original-title="Icono Deseos">
+                        <img src="/media/icon/bookmarks-24px.svg" alt="icono deseos">
+                    </button>
+                </div>
+                <div>
+                    <button onclick="adicionar_rentados( '{{libro.libro_id}}' )" id="popover2" class="btn"
+                        data-content="Añade el libro a tu lista de rentados" rel="popover" data-placement="bottom"
+                        data-original-title="Icono Rentados">
+                        <img src="/media/icon/add_shopping_cart-24px.svg" alt="icono rentados">
+                    </button>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-4" align="center">
+            <strong>Titulo:</strong>
+            <p>{{libro.titulo}}</p>
+            <br>
+            <strong>Descripcion</strong>
+            <p>{{libro.descripcion}}</p>
+            <br>
+            <strong>Autor Y Categoria</strong>
+            <p>{{libro.autor_id.nombre}}, {{libro.categoria_id.nombre}}</p>
+            <br>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#popover1').popover({ trigger: "hover" });
+    $('#popover2').popover({ trigger: "hover" });
+    // $('.toast').toast('show');
+    // const axios = require('axios');
+    axios.defaults.xsrfCookieName = 'csrftoken';
+    axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+    function adicionar_deseos(libroId) {
+        let u = '{{usuario_id}}'
+        axios({
+            method: 'post',
+            url: 'http://localhost:8000/listas/crear-deseos/',
+            data: {
+                "libro_id": libroId,
+                "usuario_id": u
+            }
+        }).then(response => {
+            if (response.data == 'ya esta') {
+                $('#error1').toast('show');
+                setTimeout(function () { $('#error1').toast('hide') }, 4000)
+            }
+            if (response.data == 'no es valido') {
+                $('error3').toast('show');
+                setTimeout(function () { $('#error3').toast('hide') }, 4000)
+            }
+            console.log(response.data)
+        }).catch(err => {
+            $('error3').toast('show');
+            setTimeout(function () { $('#error3').toast('hide') }, 4000)
+            console.log(err)
+        })
+    }
+
+    function adicionar_rentados(libroId) {
+        let u = '{{usuario_id}}'
+        axios({
+            method: 'post',
+            url: 'http://localhost:8000/listas/crear-rentados/',
+            data: {
+                "libro_id": libroId,
+                "usuario_id": u
+            }
+        }).then(response => {
+            if (response.data == 'ya esta') {
+                $('#error1').toast('show');
+                setTimeout(function () { $('#error1').toast('hide') }, 4000)
+            }
+            if (response.data == 'limite superado') {
+                $('#error2').toast('show');
+                setTimeout(function () { $('#error2').toast('hide') }, 4000)
+            }
+            if (response.data == 'no es valido') {
+                $('#error3').toast('show');
+                setTimeout(function () { $('#error3').toast('hide') }, 4000)
+            }
+            console.log(response.data)
+        }).catch(err => {
+            $('#error3').toast('show');
+            setTimeout(function () { $('#error3').toast('hide') }, 4000)
+            console.log(err)
+        })
+    }
+
+</script>
+{% endblock %}

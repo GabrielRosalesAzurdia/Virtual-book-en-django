@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Home
+{% endblock %}
+
+{% block header %}
+
+{% endblock %}
+
+{% block content %}
+
+{% if visible_logiado == False %}
+<div align="center" class="h1" style="margin:15rem;">
+    <h1>Virtualbook</h1>
+</div>
+{% endif %}
+
+{% if visible_logiado == True %}
+<div align="center" class="h1" style="margin:50px;">
+    <h1>Virtualbook</h1>
+</div>
+<div class="container mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+
+            <div class="card mb-3">
+                <div class="card-header">Lista de deseos de {{nombre_usuario}}</div>
+                <div class="card-body">
+                    {% if lista_deseos|length > 0 %}
+                        {% for libro in lista_deseos %}
+                        <div class="card mb-4" style="max-width: 540px;">
+                            <div class="row no-gutters">
+                                <div class="col-md-4">
+                                    <a href="/libros/detalles/{{libro.libro_id.libro_id}}"><img src="{{libro.libro_id.imagen}}" class="card-img" alt="imagen del libro"></a>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                        <h5 class="card-title mb-5">{{libro.libro_id.titulo}}</h5>
+                                        <p class="card-text mt-4"><small class="text-muted">{{libro.libro_id.autor_id.nombre}}</small></p>
+                                        <p class="card-text mt-4"><small class="text-muted">{{libro.libro_id.categoria_id.nombre}}</small></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% endif %}
+                    {% if lista_deseos|length == 0 %}
+                        <p>!Vacio!</p>
+                    {% endif %}
+                </div>                
+            </div>
+
+            <div class="card">
+                <div class="card-header">Lista de rentados de {{nombre_usuario}}</div>
+                <div class="card-body">
+                    {% if lista_rentados|length > 0 %}
+                        {% for libro in lista_rentados %}
+                        <div class="card mb-4" style="max-width: 540px;">
+                            <div class="row no-gutters">
+                                <div class="col-md-4">
+                                    <a href="/libros/detalles/{{libro.libro_id.libro_id}}"><img src="{{libro.libro_id.imagen}}" class="card-img" alt="imagen del libro"></a>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                        <h5 class="card-title mb-5">{{libro.libro_id.titulo}}</h5>
+                                        <p class="card-text mt-4"><small class="text-muted">{{libro.libro_id.autor_id.nombre}}</small></p>
+                                        <p class="card-text mt-4"><small class="text-muted">{{libro.libro_id.categoria_id.nombre}}</small></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% endif %}
+                    {% if lista_rentados|length == 0 %}
+                        <p>!Vacio!</p>
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endif %}
+{% endblock %}

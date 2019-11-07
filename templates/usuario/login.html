@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block nav %}
+{% endblock %}
+
+{% block header %}
+<header class="jumbotron">
+    <h1 class="text-center">Login</h1>
+</header>
+{% endblock %}
+
+{% block content %}
+
+<div class="toast" data-autohide="false" role="alert" aria-live="assertive" aria-atomic="true" style="position: absolute; top: 0; right: 0;">
+    <div class="toast-header">
+        <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fpbs.twimg.com%2Fprofile_images%2F932211484%2Fcuadrado_rojo.png&f=1&nofb=1" style="height:2s0px; width:20px;" class="rounded mr-2" alt="">
+        <strong class="mr-auto">Virtualbook</strong>
+        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="toast-body">
+        Un campo ha sido rellenado incorrectamente
+    </div>
+</div>
+
+<form method="POST" class="container">
+    {% csrf_token %}
+
+    <div class="form-group">
+      <div>
+        <label class="form-control">Email</label>
+        <input type="text" name="username" class="form-control">
+        <br>
+      </div>
+      <div>
+        <label class="form-control">Contraseña</label>
+        <input type="password" name="password" class="form-control">
+        <br>
+      </div>
+      <div>
+        <br>
+        <input class="btn btn-primary" type="submit" value="Ingresar">
+      </div>
+    </div>
+
+</form>
+
+<script>
+    let maybeError = "{{err}}"
+    console.log(maybeError == "true")
+    if (maybeError == "true") {
+        $('.toast').toast('show');
+    }
+</script>
+<!-- {% csrf_token %}
+{{ form }}
+<button type="submit">ok</button> -->
+
+{% endblock %}
