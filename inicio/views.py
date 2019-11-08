@@ -9,7 +9,7 @@ def primera_vista(request):
     lista_deseos = ListaDeseos.objects.filter(usuario_id=request.user.id)
     lista_rentados = ListaRentados.objects.filter(usuario_id=request.user.id)
     if auth:
-        nombre_usuario = request.user.first_name
+        usuario = request.user
     else:
-        nombre_usuario = ''
-    return render(request,'home.html',context={'visible_logiado':auth, 'lista_deseos':lista_deseos, 'lista_rentados':lista_rentados, 'nombre_usuario':nombre_usuario})
+        usuario = ''
+    return render(request,'home.html',context={'visible_logiado':auth, 'lista_deseos':lista_deseos, 'lista_rentados':lista_rentados, 'usuario':usuario})

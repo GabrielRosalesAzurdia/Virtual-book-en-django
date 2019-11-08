@@ -35,3 +35,19 @@ def crear_rentados(request):
             return HttpResponse('limite superado')
     else:
         return HttpResponse("ya esta")
+
+@api_view(['DELETE'])
+def delete_rentados(request):
+    q = ListaRentados.objects.filter(usuario_id=request.user.id)
+    o = q.get(libro_id = request.data.get('libro_id'))
+    print(o)
+    o.delete()
+    return HttpResponse("si")
+
+@api_view(['DELETE'])
+def delete_deseos(request):
+    q = ListaDeseos.objects.filter(usuario_id=request.user.id)
+    o = q.get(libro_id = request.data.get('libro_id'))
+    print(o)
+    o.delete()    
+    return HttpResponse("si")

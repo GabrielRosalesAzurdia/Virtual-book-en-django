@@ -25,55 +25,71 @@ Home
         <div class="col-md-8">
 
             <div class="card mb-3">
-                <div class="card-header">Lista de deseos de {{nombre_usuario}}</div>
+                <div class="card-header">Lista de deseos de {{usuario.first_name}}</div>
                 <div class="card-body">
                     {% if lista_deseos|length > 0 %}
-                        {% for libro in lista_deseos %}
-                        <div class="card mb-4" style="max-width: 540px;">
-                            <div class="row no-gutters">
-                                <div class="col-md-4">
-                                    <a href="/libros/detalles/{{libro.libro_id.libro_id}}"><img src="{{libro.libro_id.imagen}}" class="card-img" alt="imagen del libro"></a>
-                                </div>
-                                <div class="col-md-8">
-                                    <div class="card-body">
-                                        <h5 class="card-title mb-5">{{libro.libro_id.titulo}}</h5>
-                                        <p class="card-text mt-4"><small class="text-muted">{{libro.libro_id.autor_id.nombre}}</small></p>
-                                        <p class="card-text mt-4"><small class="text-muted">{{libro.libro_id.categoria_id.nombre}}</small></p>
-                                    </div>
+                    {% for libro in lista_deseos %}
+                    <div class="card mb-4" style="max-width: 540px;">
+                        <div class="row no-gutters">
+                            <div class="col-md-4">
+                                <a href="/libros/detalles/{{libro.libro_id.libro_id}}"><img
+                                        src="{{libro.libro_id.imagen}}" class="card-img" alt="imagen del libro"></a>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title mb-5">{{libro.libro_id.titulo}}</h5>
+                                    <p class="card-text mt-4"><small
+                                            class="text-muted">{{libro.libro_id.autor_id.nombre}}</small></p>
+                                    <p class="card-text mt-4"><small
+                                            class="text-muted">{{libro.libro_id.categoria_id.nombre}}</small></p>
+                                    <p>
+                                        <button class="btn" style="padding:0px;" onclick="eliminar_deseos( '{{libro.libro_id.libro_id}}' )">
+                                            <img src="/media/icon/delete-24px.svg" alt="eliminar elemento">
+                                        </button>
+                                    </p>
                                 </div>
                             </div>
                         </div>
-                        {% endfor %}
+                    </div>
+                    {% endfor %}
                     {% endif %}
                     {% if lista_deseos|length == 0 %}
-                        <p>!Vacio!</p>
+                    <p>!Vacio!</p>
                     {% endif %}
-                </div>                
+                </div>
             </div>
 
             <div class="card">
-                <div class="card-header">Lista de rentados de {{nombre_usuario}}</div>
+                <div class="card-header">Lista de rentados de {{usuario.first_name}}</div>
                 <div class="card-body">
                     {% if lista_rentados|length > 0 %}
-                        {% for libro in lista_rentados %}
-                        <div class="card mb-4" style="max-width: 540px;">
-                            <div class="row no-gutters">
-                                <div class="col-md-4">
-                                    <a href="/libros/detalles/{{libro.libro_id.libro_id}}"><img src="{{libro.libro_id.imagen}}" class="card-img" alt="imagen del libro"></a>
-                                </div>
-                                <div class="col-md-8">
-                                    <div class="card-body">
-                                        <h5 class="card-title mb-5">{{libro.libro_id.titulo}}</h5>
-                                        <p class="card-text mt-4"><small class="text-muted">{{libro.libro_id.autor_id.nombre}}</small></p>
-                                        <p class="card-text mt-4"><small class="text-muted">{{libro.libro_id.categoria_id.nombre}}</small></p>
-                                    </div>
+                    {% for libro in lista_rentados %}
+                    <div class="card mb-4" style="max-width: 540px;">
+                        <div class="row no-gutters">
+                            <div class="col-md-4">
+                                <a href="/libros/detalles/{{libro.libro_id.libro_id}}"><img
+                                        src="{{libro.libro_id.imagen}}" class="card-img" alt="imagen del libro"></a>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title mb-5">{{libro.libro_id.titulo}}</h5>
+                                    <p class="card-text mt-4"><small
+                                            class="text-muted">{{libro.libro_id.autor_id.nombre}}</small></p>
+                                    <p class="card-text mt-4"><small
+                                            class="text-muted">{{libro.libro_id.categoria_id.nombre}}</small></p>
+                                    <p>
+                                        <button class="btn" style="padding:0px;" onclick="eliminar_rentados( '{{libro.libro_id.libro_id}}' )">
+                                            <img src="/media/icon/delete-24px.svg" alt="eliminar elemento">
+                                        </button>
+                                    </p>
                                 </div>
                             </div>
                         </div>
-                        {% endfor %}
+                    </div>
+                    {% endfor %}
                     {% endif %}
                     {% if lista_rentados|length == 0 %}
-                        <p>!Vacio!</p>
+                    <p>!Vacio!</p>
                     {% endif %}
                 </div>
             </div>
@@ -81,6 +97,63 @@ Home
         </div>
     </div>
 </div>
+<script>
+    axios.defaults.xsrfCookieName = 'csrftoken';
+    axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 
+    function eliminar_deseos(libroId) {
+        let u = '{{usuario.id}}'
+        axios({
+            method: 'delete',
+            url: 'http://localhost:8000/listas/eliminar-deseos/',
+            data: {
+                "libro_id": libroId,
+                "usuario_id": u
+            }
+        }).then(response => {
+            if (response.data == 'si') {
+                new Toast({
+                    message: 'El libro ya no esta en la lista',
+                    type: 'success'
+                })
+            }
+            setTimeout(function(){location.reload();}, 5000) 
+            console.log(response.data)
+        }).catch(err => {
+            new Toast({
+                message: 'Ha ocurrido un error',
+                type: 'danger'
+            })
+            console.log(err)
+        })
+    }
+
+    function eliminar_rentados(libroId) {
+        let u = '{{usuario.id}}'
+        axios({
+            method: 'delete',
+            url: 'http://localhost:8000/listas/eliminar-rentados/',
+            data: {
+                "libro_id": libroId,
+                "usuario_id": u
+            }
+        }).then(response => {
+            if (response.data == 'si') {
+                new Toast({
+                    message: 'El libro ya no esta en la lista',
+                    type: 'success'
+                })
+            }
+            setTimeout(function(){location.reload();}, 4000) 
+            console.log(response.data)
+        }).catch(err => {
+            new Toast({
+                message: 'Ha ocurrido un error',
+                type: 'danger'
+            })
+            console.log(err)
+        })
+    }
+</script>
 {% endif %}
 {% endblock %}
